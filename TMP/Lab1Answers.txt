@@ -1,0 +1,79 @@
+Random Scheduler:----
+Advantages:
+1) Random scheduler will give each process a fair share of CPU. 
+2) There will be no starvation for any process that was in the ready queue beacuse
+random generator generates uniform number when generated in high frequency.
+Disadvntages:
+1) If the quantum is less then the context switching will be very high for general
+purpose process which are long running process.
+2) if the quantum is high then the switching will be very less which makes the system
+unresponsive.
+3)The process that get scheduled after context switching is random which is not att all
+preferable in real time systems.
+
+Linux Scheduler:------
+1)This type uses aging factor which increases the goodnness value depending upon the aount of
+time the process is waiting in the ready queue for the scheduler to schedule. This
+prevents starvation.
+2) In every epoch each process is given a quantam which makes sure that 
+process is given a fair share.
+Disadvantages:
+1) This method doesnot give importance to real time process. Real time process are kept
+in the queue and waits till the epoch current epoch ends, priority of this real time
+process.
+2) The logic to implement scheduling before context switching takes larger time
+compared to Xinu scheduler which makes context swicthing relatively slow.
+
+Priority based Robin Robin Scheduling(Xinu defualt schduler):---
+Advantages:
+1.Highest priority process is executed first which gives advantage for 
+real time application if priority of the application is given high.
+2. With process with high equal priority this algorithm will give fair share 
+of cpu time to all of them.
+Disadvantages:
+Lowest priority process will be starved because if the ready queue has some process
+which always have higher priority than this lower priority process willnever get executed. 
+
+2))
+In random scheduling policy the cpu scheduling time is proportional to priority of
+the given process. This is logically true because we are trying to generate 
+a random number which is within the range of sum of priorities of process in
+ready queue in the algorithm. This generator given high frequency generates
+number in uniform distribution of sum of priorities.
+
+Since the given scheduling times for p1,p2,p3 are 20%,30% and 50% respectively
+and these are the only 3 processes in ready queue the piority of P1,P2 and P3
+should be in the ratio 2:3:5.
+
+One example for the priorities is 10,15,25 respectively.
+
+Let me generalise this ratio.This priorities should be
+P1 -> 2N
+P2 -> 3N
+P3 -> 5N
+where N is any positive integer.
+
+3)) 
+Random Scheduling:
+In every scheduler NULL process is the process that is executed first. NULL process
+will always be is the ready queue and will be the one that will be scheduled
+when there are no process in the ready queue.
+This situation is handled in the Random scheduler in the below way. When there
+is only NULL process in the ready queue then the priority sum will be zero because
+the priority of NULL process is 0. the variable priority_sum-1=-1 which is less than 0
+so null process will be scheduled here. This contect switiching of null process 
+happens until the ready queue is empy.
+
+Linux Like scheduling:
+Same as above NULL process is the process that will be executed first. When ready
+queue is empty each will be started. In this new epoch the quantum and goodness of
+the NULL process is 0. Since there are no other process this process will be executed
+first for 0 quantam. This means the context switching happens every second in NULL
+process until the epoch finds the new process in the ready queue.
+
+Xinu default scheduler:
+when ready queue is empty then NULL process will be the only process with prioriy
+0.This process will be prempted by scheduler because this is the process with highest
+priority in ready queue. This context switching of NULL process happens until the ready queue is
+not empty because no other process will have lesser priority than NULL process.
+ 
